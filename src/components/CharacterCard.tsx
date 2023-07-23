@@ -1,5 +1,11 @@
+"use client";
+
 import Image, { StaticImageData } from "next/image";
 import cardImg1 from "../assets/cardImg1.jpeg";
+import useSound from "use-sound";
+import { useCreateChat } from "~/hooks/useCreateChat";
+import { options } from "~/constant/metadata";
+import { useRouter } from "next/navigation";
 
 interface CharacterCardProps {
   name: string;
@@ -13,17 +19,38 @@ interface CharacterCardProps {
   image: StaticImageData;
   profileImg: StaticImageData;
   selected: boolean;
+  role: string;
 }
 
 export function CharacterCard(props: CharacterCardProps) {
+  const [play, { stop }] = useSound("/sounds/card-hover.wav", { volume: 0.75 });
+  const { mutate, isLoading } = useCreateChat();
+  const router = useRouter();
+
+  const handleClick = async () => {
+    if (isLoading) return;
+    const availableOptions = options.filter((option) => option.role === props.role);
+    var randomOption = availableOptions[Math.floor(Math.random() * availableOptions.length)];
+    const data = await mutate({ metadataId: randomOption.id, aiRole: props.role as "buyer" | "seller" | "tenant" });
+    router.push(`/chat?chatId=${data._id}`);
+  };
+
   return (
     <div
+      onMouseEnter={() => play()}
+      onMouseLeave={() => stop()}
+      onClick={handleClick}
       style={{
         background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${props.image.src})`,
         backgroundSize: "cover",
       }}
       className={`hover:cursor-pointer group backdrop-brightness-50 relative h-[500px] p-4 flex flex-col items-center justify-around w-96 overflow-hidden rounded bg-white shadow-lg shadow-black`}
     >
+      {isLoading ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <span className="text-white text-2xl">Creating Chat...</span>
+        </div>
+      ) : null}
       <Image alt="profile-img" src={props.profileImg} className="w-3/4 group-hover:w-1/3 transition-all" />
       <h2 className="text-2xl">{props.name}</h2>
       <div className=" p-2 text-center hidden grid-cols-2 details group-hover:grid group-hover:h-96 h-0 w-full transition-all">

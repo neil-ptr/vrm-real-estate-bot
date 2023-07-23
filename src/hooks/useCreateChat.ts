@@ -27,6 +27,7 @@ export function useCreateChat() {
       const chat = await response.json();
       setIsLoading(false);
       setData(chat);
+      return chat;
     } catch (e: any) {
       setError(e);
     } finally {
