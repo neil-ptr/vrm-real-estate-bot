@@ -1,9 +1,6 @@
 import { VRMExpressionManager } from '@pixiv/three-vrm';
 import { BLINK_CLOSE_MAX, BLINK_OPEN_MAX } from './emoteConstants';
 
-/**
- * 自動瞬きを制御するクラス
- */
 export class AutoBlink {
   private _expressionManager: VRMExpressionManager;
   private _remainingTime: number;

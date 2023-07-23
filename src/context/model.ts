@@ -6,13 +6,9 @@ import {
   VRMUtils,
 } from '@pixiv/three-vrm';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-// import { VRMAnimation } from '../../lib/VRMAnimation/VRMAnimation';
-// import { VRMLookAtSmootherLoaderPlugin } from '@/lib/VRMLookAtSmootherLoaderPlugin/VRMLookAtSmootherLoaderPlugin';
-// import { LipSync } from '../lipSync/lipSync';
 import { VRMAnimation } from '~/lib/VRMAnimation/VRMAnimation';
 import { EmoteController } from '~/features/emoteController/emoteController';
 import { VRMLookAtSmootherLoaderPlugin } from '~/lib/VRMLookAtSmootherLoaderPlugin/VRMLookAtSmootherLoaderPlugin';
-// import { Screenplay } from '../messages/messages';
 
 export class Model {
   public vrm?: VRM | null;
@@ -21,13 +17,11 @@ export class Model {
   public isSpeaking: boolean = false;
 
   private _lookAtTargetParent: THREE.Object3D;
-  // private _lipSync?: LipSync;
   private currentEmotion: VRMExpressionPresetName = 'neutral';
   private mouthVolume: number = 1;
 
   constructor(lookAtTargetParent: THREE.Object3D) {
     this._lookAtTargetParent = lookAtTargetParent;
-    // this._lipSync = new LipSync(new AudioContext());
     setInterval(() => {
       this.mouthVolume = 1 - this.mouthVolume;
     }, 250);

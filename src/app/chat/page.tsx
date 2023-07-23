@@ -3,7 +3,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import Messages from '~/components/Messages';
 import VrmViewer from '~/components/VrmViewer';
-import { emotionsConfigMap } from '~/config';
+import { emotionsConfig } from '~/config';
 import { ViewerContext } from '~/context/vrmContext';
 import { parseMessage } from '~/utils/parseMessage';
 import { useSearchParams } from 'next/navigation';
@@ -23,6 +23,31 @@ export default function Page() {
 
   const { viewer } = useContext(ViewerContext);
 
+  // idk why this is necessary but it on first call to this function returns empty array
+  window.speechSynthesis.getVoices();
+
+  const getVoice = useCallback(() => {
+    let voice = 'Samantha';
+    switch (model) {
+      case '1':
+        voice = 'Google UK English Female';
+        break;
+      case '2':
+        voice = 'Samantha';
+        break;
+      case '3':
+        voice = 'Google UK English Male';
+        break;
+      default:
+        voice = 'Samantha';
+        break;
+    }
+    return (
+      window.speechSynthesis.getVoices().find((v) => v.voiceURI === voice) ||
+      window.speechSynthesis.getVoices()[0]
+    );
+  }, [model]);
+
   // react to new chat responses from the server
   useEffect(() => {
     if (messageHistory.length && messageHistory[messageHistory.length - 1]) {
@@ -36,7 +61,9 @@ export default function Page() {
       for (let i = 0; i < emotions.length; i++) {
         const speech = new SpeechSynthesisUtterance(messages[i]);
 
-        const emotion = emotionsConfigMap.get(emotions[i]);
+        speech.voice = getVoice();
+
+        const emotion = emotionsConfig[emotions[i]];
         if (!emotion) continue;
 
         speech.onstart = () => {
@@ -55,7 +82,7 @@ export default function Page() {
         window.speechSynthesis.speak(speech);
       }
     }
-  }, [messageHistory, viewer]);
+  }, [getVoice, messageHistory, viewer]);
 
   const handleSend = (message: string) => {
     setMessageHistory([

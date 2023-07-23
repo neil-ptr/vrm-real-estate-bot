@@ -1,7 +1,5 @@
 import * as THREE from 'three';
 import { Model } from './model';
-// import { loadVRMAnimation } from '@/lib/VRMAnimation/loadVRMAnimation';
-// import { buildUrl } from '@/utils/buildUrl';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { loadVRMAnimation } from '~/lib/VRMAnimation/loadVRMAnimation';
 import { VRMExpressionPresetName } from '@pixiv/three-vrm';
@@ -54,7 +52,6 @@ export class Viewer {
         const vrma = await loadVRMAnimation('/idle_loop.vrma');
         if (vrma) this.model.loadAnimation(vrma);
 
-        // // HACK: アニメーションの原点がずれているので再生後にカメラ位置を調整する
         requestAnimationFrame(() => {
           this.resetCamera();
         });
