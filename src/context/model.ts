@@ -78,7 +78,7 @@ export class Model {
   public update(delta: number): void {
     if (this.isSpeaking) {
       this.emoteController?.playEmotion(this.currentEmotion);
-      this.emoteController?.lipSync('aa', this.mouthVolume * 0.8);
+      this.emoteController?.lipSync('aa', this.mouthVolume * 1);
     } else {
       this.emoteController?.playEmotion('neutral');
       this.emoteController?.lipSync('aa', 0);

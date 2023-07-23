@@ -7,17 +7,18 @@ interface VrmViewer {
   model: string;
 }
 
-export default function VrmViewer() {
+export default function VrmViewer({ model }: VrmViewer) {
   const { viewer } = useContext(ViewerContext);
 
   const canvasRef = useCallback(
     (canvas: HTMLCanvasElement) => {
       if (canvas) {
+        viewer.unloadVRM();
         viewer.setup(canvas);
-        viewer.loadVrm('/models/8988580958909680445.vrm');
+        viewer.loadVrm(`/models/${model}.vrm`);
       }
     },
-    [viewer]
+    [viewer, model]
   );
 
   return (
