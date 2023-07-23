@@ -3,26 +3,39 @@
 import { useState } from "react";
 import { IMessage } from "~/models/message";
 
-export function useGetMessages() {
+export function useCreateMessage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<Partial<IMessage>[] | null>(null);
+  const [data, setData] = useState<IMessage | null>(null);
   const [error, setError] = useState(null);
 
-  const getData = async ({ chatId }: { chatId: string }) => {
+  const mutate = async ({
+    chatId,
+    message,
+    callback,
+  }: {
+    chatId: string;
+    message: string;
+    callback: (val: any) => void;
+  }) => {
     setIsLoading(true);
     setData(null);
     setError(null);
     try {
-      const response = await fetch(`/api/messages?chatId=${chatId}`, {
-        method: "GET",
+      const response = await fetch("/api/chats/message", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          chatId,
+          message,
+        }),
       });
 
-      const chat = await response.json();
+      const newMessage = await response.json();
       setIsLoading(false);
-      setData(chat);
+      setData(newMessage);
+      callback(newMessage);
     } catch (e: any) {
       setError(e);
     } finally {
@@ -31,8 +44,7 @@ export function useGetMessages() {
   };
 
   return {
-    getData,
-    setData,
+    mutate,
     data,
     error,
     isLoading,
