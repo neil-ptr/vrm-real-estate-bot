@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { VRM, VRMExpressionManager, VRMHumanBoneName } from "@pixiv/three-vrm";
+import * as THREE from 'three';
+import { VRM, VRMExpressionManager, VRMHumanBoneName } from '@pixiv/three-vrm';
 
 export class VRMAnimation {
   public duration: number;
@@ -35,14 +35,14 @@ export class VRMAnimation {
     }
 
     if (vrm.lookAt != null) {
-      const track = this.createLookAtTrack("lookAtTargetParent.quaternion");
+      const track = this.createLookAtTrack('lookAtTargetParent.quaternion');
 
       if (track != null) {
         tracks.push(track);
       }
     }
 
-    return new THREE.AnimationClip("Clip", this.duration, tracks);
+    return new THREE.AnimationClip('Clip', this.duration, tracks);
   }
 
   public createHumanoidTracks(vrm: VRM): THREE.KeyframeTrack[] {
@@ -50,7 +50,9 @@ export class VRMAnimation {
     const metaVersion = vrm.meta.metaVersion;
     const tracks: THREE.KeyframeTrack[] = [];
 
-    for (const [name, origTrack] of this.humanoidTracks.rotation.entries()) {
+    const rotationEntries = Array.from(this.humanoidTracks.rotation.entries());
+
+    for (const [name, origTrack] of rotationEntries) {
       const nodeName = humanoid.getNormalizedBoneNode(name)?.name;
 
       if (nodeName != null) {
@@ -58,14 +60,18 @@ export class VRMAnimation {
           `${nodeName}.quaternion`,
           origTrack.times,
           origTrack.values.map((v, i) =>
-            metaVersion === "0" && i % 2 === 0 ? -v : v
+            metaVersion === '0' && i % 2 === 0 ? -v : v
           )
         );
         tracks.push(track);
       }
     }
 
-    for (const [name, origTrack] of this.humanoidTracks.translation.entries()) {
+    const translationEntries = Array.from(
+      this.humanoidTracks.translation.entries()
+    );
+
+    for (const [name, origTrack] of translationEntries) {
       const nodeName = humanoid.getNormalizedBoneNode(name)?.name;
 
       if (nodeName != null) {
@@ -76,7 +82,7 @@ export class VRMAnimation {
 
         const track = origTrack.clone();
         track.values = track.values.map(
-          (v, i) => (metaVersion === "0" && i % 3 !== 1 ? -v : v) * scale
+          (v, i) => (metaVersion === '0' && i % 3 !== 1 ? -v : v) * scale
         );
         track.name = `${nodeName}.position`;
         tracks.push(track);
