@@ -44,7 +44,7 @@ export function EvaluateModal({
                     className="text-base font-bold leading-6 text-gray-900"
                     id="modal-title"
                   >
-                    Rating: {evaluation.rating}
+                    Rating: {evaluation.rating}/10
                   </h3>
                   <div className="mt-2">
                     <h4 className="text-black font-semibold">Explanation:</h4>
