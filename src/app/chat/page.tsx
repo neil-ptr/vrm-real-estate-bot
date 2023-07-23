@@ -58,21 +58,18 @@ export default function Page() {
     }
   }, [messageHistory, viewer]);
 
-  const handleSend = useCallback(
-    (message: string) => {
-      setMessageHistory([
-        ...messageHistory,
-        {
-          source: 'bot',
-          message: '[happy] i very happy [sad] i very sad', // TODO: replace with message
-        },
-      ]);
-    },
-    [messageHistory]
-  );
+  const handleSend = (message: string) => {
+    setMessageHistory([
+      ...messageHistory,
+      {
+        source: 'bot',
+        message: '[happy] i very happy [sad] i very sad', // TODO: replace with message
+      },
+    ]);
+  };
 
   return (
-    <main className="grid grid-cols-[13fr_7fr] h-screen">
+    <main className="grid grid-cols-[13fr_7fr] h-screen w-screen">
       <div className="relative">
         <VrmViewer model={model} />
       </div>

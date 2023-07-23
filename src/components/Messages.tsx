@@ -55,13 +55,7 @@ const Messages = ({ messageHistory, onSend }: MessagesProps) => {
             setMessage(e.target.value);
           }}
         />
-        <button
-          className="rounded-md bg-purple-500 px-2"
-          type="submit"
-          onClick={() => {
-            handleSubmit();
-          }}
-        >
+        <button className="rounded-md bg-purple-500 px-2" type="submit">
           Send
         </button>
       </form>
