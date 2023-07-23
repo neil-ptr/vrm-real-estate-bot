@@ -11,7 +11,7 @@ const Home = () => {
 
   useEffect(() => {
     if (data) {
-      router.push(`/chat?chatId=${data._id}`);
+      router.push(`/chatPage?chatId=${data._id}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
