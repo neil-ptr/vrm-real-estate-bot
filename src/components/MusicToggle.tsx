@@ -4,8 +4,6 @@ import { Switch } from "./ui/switch";
 import { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
-const localStorage = window.localStorage;
-
 export function MusicToggle() {
   const [musicEnabled, setMusicEnabled] = useLocalStorage("musicEnabled", true);
   const [play, { stop }] = useSound("/sounds/bg-music.mp4", { volume: 0.5 });
