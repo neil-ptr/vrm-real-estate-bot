@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
-import { IMessage } from "~/models/message";
-import { removeEmotions } from "~/utils/removeEmotions";
+import { useRef, useState } from 'react';
+import { IMessage } from '~/models/message';
+import { removeEmotions } from '~/utils/removeEmotions';
 
 interface MessagesProps {
   messageHistory: Partial<IMessage>[];
@@ -8,15 +8,19 @@ interface MessagesProps {
   isLoadingCreateMessage: boolean;
 }
 
-const Messages = ({ messageHistory, onSend, isLoadingCreateMessage }: MessagesProps) => {
+const Messages = ({
+  messageHistory,
+  onSend,
+  isLoadingCreateMessage,
+}: MessagesProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const handleSubmit = () => {
     onSend(message);
     if (inputRef.current) {
-      inputRef.current.value = "";
-      setMessage("");
+      inputRef.current.value = '';
+      setMessage('');
     }
   };
 
@@ -27,25 +31,34 @@ const Messages = ({ messageHistory, onSend, isLoadingCreateMessage }: MessagesPr
           let m = message as any;
           if (m.response) {
             message.text = m.response;
-            message.from = "ai";
+            message.from = 'ai';
           }
 
-          let className = "bg-violet-700 text-white w-fit-content";
-          if (message.from === "ai") {
-            className = "bg-zinc-500 text-white w-fit-content";
+          let className = 'bg-violet-700 text-white w-fit-content';
+          if (message.from === 'ai') {
+            className = 'bg-zinc-500 text-white w-fit-content';
           }
 
           return (
             <div
               key={index}
-              className={`w-full flex pb-2 ${message.from === "user" ? "justify-end" : "justify-start"}`}
+              className={`w-full flex pb-2 ${
+                message.from === 'user' ? 'justify-end' : 'justify-start'
+              }`}
             >
               <div className={`p-2 rounded-md w-3/4 ${className}`}>
-                {message.from === "ai" ? removeEmotions(message.text ?? "") : message.text}
+                {message.from === 'ai'
+                  ? removeEmotions(message.text ?? '')
+                  : message.text}
               </div>
             </div>
           );
         })}
+        {isLoadingCreateMessage && (
+          <div className="text-4xl p-2 rounded-md w-fit bg-zinc-500 text-white w-fit-content ">
+            <span className="animate-pulse">...</span>
+          </div>
+        )}
       </div>
       <form
         className="flex gap-2"
@@ -63,8 +76,12 @@ const Messages = ({ messageHistory, onSend, isLoadingCreateMessage }: MessagesPr
             setMessage(e.target.value);
           }}
         />
-        <button className="rounded-md bg-violet-700 px-2" type="submit" disabled={isLoadingCreateMessage}>
-          {isLoadingCreateMessage ? "loading..." : "Send"}
+        <button
+          className="rounded-md bg-violet-700 px-2"
+          type="submit"
+          disabled={isLoadingCreateMessage}
+        >
+          {isLoadingCreateMessage ? 'loading...' : 'Send'}
         </button>
       </form>
     </div>
