@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import Messages from '~/components/Messages';
-import VrmViewer from '~/components/VrmViewer';
-import { emotionsConfig } from '~/config';
-import { ViewerContext } from '~/context/vrmContext';
-import { parseMessage } from '~/utils/parseMessage';
-import { useSearchParams } from 'next/navigation';
-import { useGetMessages } from '~/hooks/useGetMessages';
-import { useGetChat } from '~/hooks/useGetChat';
-import { useEvaluateChat } from '~/hooks/useEvaluateChat';
-import { useCreateMessage } from '~/hooks/useCreateMessage';
-import { IMessage } from '~/models/message';
-import Link from 'next/link';
-import { options } from '~/constant/metadata';
-import characters from '~/constant/characters';
-import { EvaluateModal } from '~/components/EvaluateModal';
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import Messages from "~/components/Messages";
+import VrmViewer from "~/components/VrmViewer";
+import { emotionsConfig } from "~/config";
+import { ViewerContext } from "~/context/vrmContext";
+import { parseMessage } from "~/utils/parseMessage";
+import { useSearchParams } from "next/navigation";
+import { useGetMessages } from "~/hooks/useGetMessages";
+import { useGetChat } from "~/hooks/useGetChat";
+import { useEvaluateChat } from "~/hooks/useEvaluateChat";
+import { useCreateMessage } from "~/hooks/useCreateMessage";
+import { IMessage } from "~/models/message";
+import Link from "next/link";
+import { options } from "~/constant/metadata";
+import characters from "~/constant/characters";
+import { EvaluateModal } from "~/components/EvaluateModal";
 
 interface MessageHistoryItem {
   message: string;
-  source: 'user' | 'bot';
+  source: "user" | "bot";
 }
 
 export default function Page() {
@@ -28,26 +28,17 @@ export default function Page() {
 
   // const model = searchParams.get('model') || '';
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const messageCount = useRef(0);
 
   const { getData: getChat, data: chat } = useGetChat();
-  const {
-    getData: getMessages,
-    data: messages,
-    setData: setMessages,
-  } = useGetMessages();
-  const { mutate: sendMessage, isLoading: isLoadingCreateMessage } =
-    useCreateMessage();
-  const {
-    mutate: evaluateConversation,
-    data: evaluateResponse,
-    isLoading: isLoadingEvaluateChat,
-  } = useEvaluateChat();
+  const { getData: getMessages, data: messages, setData: setMessages } = useGetMessages();
+  const { mutate: sendMessage, isLoading: isLoadingCreateMessage } = useCreateMessage();
+  const { mutate: evaluateConversation, data: evaluateResponse, isLoading: isLoadingEvaluateChat } = useEvaluateChat();
 
-  const model = characters[chat?.aiRole || 'tenant'].background.modelId;
+  const model = characters[chat?.aiRole || "tenant"].background.modelId;
 
-  const chatId = searchParams.get('chatId') ?? '';
+  const chatId = searchParams.get("chatId") ?? "";
 
   useEffect(() => {
     getChat({ chatId });
@@ -73,31 +64,30 @@ export default function Page() {
   // window?.speechSynthesis.getVoices();
 
   const getVoice = useCallback(() => {
-    let voice = 'Samantha';
+    let voice = "Samantha";
     switch (model) {
-      case '1':
-        voice = 'Google UK English Female';
+      case "1":
+        voice = "Google UK English Female";
         break;
-      case '2':
-        voice = 'Samantha';
+      case "2":
+        voice = "Samantha";
         break;
-      case '3':
-        voice = 'Google UK English Male';
+      case "3":
+        voice = "Google UK English Male";
         break;
       default:
-        voice = 'Samantha';
+        voice = "Samantha";
         break;
     }
     return (
-      window.speechSynthesis.getVoices().find((v) => v.voiceURI === voice) ||
-      window.speechSynthesis.getVoices()[0]
+      window.speechSynthesis.getVoices().find((v) => v.voiceURI === voice) || window.speechSynthesis.getVoices()[0]
     );
   }, [model]);
 
   // react to new chat responses from the server
   useEffect(() => {
     // if (!messages || messageCount.current !== messages.length + 1) return;
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     if (messages && messages.length && window?.speechSynthesis) {
       let newestMessage = messages[messages.length - 1] as any;
@@ -106,9 +96,7 @@ export default function Page() {
         newestMessage.text = newestMessage.response;
       }
 
-      const [emotions, messageSentences] = parseMessage(
-        newestMessage.text ?? ''
-      );
+      const [emotions, messageSentences] = parseMessage(newestMessage.text ?? "");
 
       if (!emotions.length || !messageSentences.length) return;
 
@@ -141,7 +129,7 @@ export default function Page() {
   const handleSend = async (message: string) => {
     const newMessage = {
       chatId,
-      from: 'user',
+      from: "user",
       text: message,
       createdAt: new Date().getTime(),
     } as Partial<IMessage>;
@@ -151,7 +139,7 @@ export default function Page() {
       message,
       callback: (m) => {
         setMessages([...(messages ?? []), newMessage, m]);
-        setMessage('');
+        setMessage("");
       },
     });
   };
@@ -160,21 +148,14 @@ export default function Page() {
     <>
       <main className="grid grid-cols-[13fr_7fr] h-screen w-screen relative">
         <div className="absolute top-0 left-0 p-4 z-20">
-          <Link
-            className="text-lg cursor-pointer p-4 bg-white text-black rounded-md"
-            href="/"
-          >
+          <Link className="text-lg cursor-pointer p-4 bg-white text-black rounded-md" href="/">
             Back
           </Link>
         </div>
         <div className="relative">
           <VrmViewer
             model={model}
-            metadata={
-              options.find(
-                (metadata) => metadata.id === chat?.metadataId
-              ) as any
-            }
+            metadata={options.find((metadata) => metadata.id === chat?.metadataId) as any}
             evaluate={() => {
               evaluateConversation({ chatId });
             }}
@@ -188,13 +169,7 @@ export default function Page() {
           isLoadingCreateMessage={isLoadingCreateMessage}
         />
       </main>
-      {/* {evaluateResponse && (
-        <EvaluateModal
-          evaluation={evaluateResponse}
-          isOpen={isOpened}
-          setIsOpen={setIsOpened}
-        />
-      )} */}
+      {evaluateResponse && <EvaluateModal evaluation={evaluateResponse} isOpen={isOpened} setIsOpen={setIsOpened} />}
     </>
   );
 }

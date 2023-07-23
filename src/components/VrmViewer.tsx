@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useContext, useCallback } from 'react';
-import { ViewerContext } from '../context/vrmContext';
+import { useContext, useCallback } from "react";
+import { ViewerContext } from "../context/vrmContext";
 
 export interface MetaData {
   role: string;
@@ -21,12 +21,7 @@ interface VrmViewer {
   isLoadingEvaluateChat: boolean;
 }
 
-export default function VrmViewer({
-  model,
-  metadata,
-  evaluate,
-  isLoadingEvaluateChat,
-}: VrmViewer) {
+export default function VrmViewer({ model, metadata, evaluate, isLoadingEvaluateChat }: VrmViewer) {
   const { viewer } = useContext(ViewerContext);
 
   const canvasRef = useCallback(
@@ -41,16 +36,14 @@ export default function VrmViewer({
   );
 
   return (
-    <div className={'absolute top-0 left-0 h-[100svh] -z-10'}>
-      <canvas ref={canvasRef} className={'h-full w-full'}></canvas>
+    <div className={"absolute top-0 left-0 h-[100svh]"}>
+      <canvas ref={canvasRef} className={"h-full w-full"}></canvas>
       {metadata && (
-        <div className="absolute bottom-0 w-full">
+        <div className="absolute bottom-0 w-full z-1">
           <div className="flex justify-center pb-8">
             <div className="flex flex-col">
               <div className="max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden p-6 mt-4 text-black">
-                <h2 className="text-xl font-semibold mb-4">
-                  Client Information
-                </h2>
+                <h2 className="text-xl font-semibold mb-4">Client Information</h2>
                 <p>
                   <strong>Role:</strong> {metadata.role}
                 </p>
@@ -82,7 +75,7 @@ export default function VrmViewer({
                 }}
                 className="rounded-lg bg-white text-black py-2 mt-2 cursor-pointer z-20"
               >
-                {isLoadingEvaluateChat ? 'Evaluating...' : 'Evaluate'}
+                {isLoadingEvaluateChat ? "Evaluating..." : "Evaluate"}
               </button>
             </div>
           </div>
