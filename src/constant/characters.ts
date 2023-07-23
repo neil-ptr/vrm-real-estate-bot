@@ -1,12 +1,14 @@
-import sampleImg from "~/assets/sample-character.png";
 import cardImg1 from "~/assets/cardImg1.jpeg";
 import cardImg2 from "~/assets/cardImg2.jpeg";
 import cardImg3 from "~/assets/cardImg3.jpeg";
+import Jane from "~/assets/profiles/Jane.png";
+import Janet from "~/assets/profiles/Janet.png";
+import John from "~/assets/profiles/John.png";
 
 const characters = {
   buyer: {
     background: {
-      name: "Goku",
+      name: "Janet",
       age: 33,
       currentAddress: "San Francisco",
       job: "CEO",
@@ -15,7 +17,7 @@ const characters = {
       family: "Married with 2 kids",
       personality: "Outgoing, friendly, and loves to travel",
       image: cardImg1,
-      profileImg: sampleImg,
+      profileImg: Janet,
     },
   },
   seller: {
@@ -29,7 +31,7 @@ const characters = {
       family: "Single",
       personality: "Introverted, quiet, and loves to read",
       image: cardImg2,
-      profileImg: sampleImg,
+      profileImg: John,
     },
   },
   tenant: {
@@ -43,7 +45,7 @@ const characters = {
       family: "Single",
       personality: "Outgoing and loves to party",
       image: cardImg3,
-      profileImg: sampleImg,
+      profileImg: Jane,
     },
   },
 };

@@ -51,7 +51,11 @@ export function CharacterCard(props: CharacterCardProps) {
           <span className="text-white text-2xl">Creating Chat...</span>
         </div>
       ) : null}
-      <Image alt="profile-img" src={props.profileImg} className="w-3/4 group-hover:w-1/3 transition-[width]" />
+      <Image
+        alt="profile-img"
+        src={props.profileImg}
+        className="h-[400px] w-full group-hover:h-[200px] group-hover:w-1/2 transition-[height_width]"
+      />
       <h2 className="text-2xl pt-8 group-hover:pt-2">{props.name}</h2>
       <div className=" p-2 text-center hidden grid-cols-2 details group-hover:grid group-hover:h-96 h-0 w-full transition-[height]">
         <span>Age: {props.age}</span>
