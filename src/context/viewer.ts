@@ -145,9 +145,14 @@ export class Viewer {
     this.model.isSpeaking = false;
   };
 
-  public setEmotion = (emotion: VRMExpressionPresetName) => {
+  public setEmotion = (emotion: string) => {
     if (!this.model) return;
-    this.model.setEmotion(emotion);
+
+    if (emotion === 'end') {
+      this.model.setEmotion('angry' as VRMExpressionPresetName);
+      return;
+    }
+    this.model.setEmotion(emotion as VRMExpressionPresetName);
   };
 
   public update = () => {

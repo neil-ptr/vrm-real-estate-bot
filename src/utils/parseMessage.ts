@@ -1,7 +1,7 @@
 import { Emotion, EmotionMessages } from '~/types';
 
 const isEmotion = (emotion: string): emotion is Emotion => {
-  return ['neutral', 'happy', 'sad', 'angry', 'relaxed'].includes(
+  return ['neutral', 'happy', 'sad', 'angry', 'relaxed', 'end'].includes(
     emotion as Emotion
   );
 };

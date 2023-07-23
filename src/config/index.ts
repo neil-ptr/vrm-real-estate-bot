@@ -4,4 +4,5 @@ export const emotionsConfig = {
   sad: { pitch: 0.9, rate: 0.9 },
   angry: { pitch: 0.9, rate: 1 },
   relaxed: { pitch: 1, rate: 1 },
+  end: { pitch: 0.9, rate: 1 },
 };

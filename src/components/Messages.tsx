@@ -1,12 +1,18 @@
 import { useRef, useState } from 'react';
+import { IMessage } from '~/models/message';
 import { removeEmotions } from '~/utils/removeEmotions';
 
 interface MessagesProps {
-  messageHistory: { source: string; text: string }[];
+  messageHistory: Partial<IMessage>[];
   onSend: (message: string) => void;
+  isLoadingEvaluateChat: boolean;
 }
 
-const Messages = ({ messageHistory, onSend }: MessagesProps) => {
+const Messages = ({
+  messageHistory,
+  onSend,
+  isLoadingEvaluateChat,
+}: MessagesProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState('');
 
@@ -22,8 +28,14 @@ const Messages = ({ messageHistory, onSend }: MessagesProps) => {
     <div className="h-screen flex flex-col p-8">
       <div className="grow overflow-y-auto pb-4">
         {messageHistory.map((message, index) => {
+          let m = message as any;
+          if (m.response) {
+            message.text = m.response;
+            message.from = 'ai';
+          }
+
           let className = 'bg-pink-500 text-white w-fit-content';
-          if (message.source === 'bot') {
+          if (message.from === 'ai') {
             className = 'bg-zinc-500 text-white w-fit-content';
           }
 
@@ -31,12 +43,12 @@ const Messages = ({ messageHistory, onSend }: MessagesProps) => {
             <div
               key={index}
               className={`w-full flex pb-2 ${
-                message.source === 'user' ? 'justify-start' : 'justify-end'
+                message.from === 'user' ? 'justify-end' : 'justify-start'
               }`}
             >
-              <div className={`p-2 rounded-md ${className}`}>
-                {message.source === 'bot'
-                  ? removeEmotions(message.text)
+              <div className={`p-2 rounded-md w-3/4 ${className}`}>
+                {message.from === 'ai'
+                  ? removeEmotions(message.text ?? '')
                   : message.text}
               </div>
             </div>
@@ -59,8 +71,12 @@ const Messages = ({ messageHistory, onSend }: MessagesProps) => {
             setMessage(e.target.value);
           }}
         />
-        <button className="rounded-md bg-purple-500 px-2" type="submit">
-          Send
+        <button
+          className="rounded-md bg-purple-500 px-2"
+          type="submit"
+          disabled={isLoadingEvaluateChat}
+        >
+          {isLoadingEvaluateChat ? 'loading...' : 'Send'}
         </button>
       </form>
     </div>

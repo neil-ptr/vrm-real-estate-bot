@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
 import { set } from "mongoose";
 import { useSearchParams } from "next/navigation";
@@ -30,7 +30,7 @@ const ChatPage = () => {
     isLoading: isLoadingEvaluateChat,
   } = useEvaluateChat();
 
-  const chatId = searchParams.get("chatId") ?? "";
+  const chatId = searchParams.get('chatId') ?? '';
 
   useEffect(() => {
     getChat({ chatId });
@@ -75,7 +75,7 @@ const ChatPage = () => {
                 onClick={async () => {
                   const newMessage = {
                     chatId,
-                    from: "user",
+                    from: 'user',
                     text: message,
                     createdAt: new Date().getTime(),
                   } as Partial<IMessage>;
@@ -85,12 +85,12 @@ const ChatPage = () => {
                     message,
                     callback: (m) => {
                       setMessages([...(messages ?? []), newMessage, m]);
-                      setMessage("");
+                      setMessage('');
                     },
                   });
                 }}
               >
-                {isLoadingCreateMessage ? "loading..." : "Send"}
+                {isLoadingCreateMessage ? 'loading...' : 'Send'}
               </button>
             </>
           ) : null}

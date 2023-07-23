@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { IMessage } from "~/models/message";
+import { useState } from 'react';
+import { IMessage } from '~/models/message';
 
 export function useGetMessages() {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,9 +14,9 @@ export function useGetMessages() {
     setError(null);
     try {
       const response = await fetch(`/api/messages?chatId=${chatId}`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 

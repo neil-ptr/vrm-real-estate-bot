@@ -1,12 +1,17 @@
 'use client';
 
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import Messages from '~/components/Messages';
 import VrmViewer from '~/components/VrmViewer';
 import { emotionsConfig } from '~/config';
 import { ViewerContext } from '~/context/vrmContext';
 import { parseMessage } from '~/utils/parseMessage';
 import { useSearchParams } from 'next/navigation';
+import { useGetMessages } from '~/hooks/useGetMessages';
+import { useGetChat } from '~/hooks/useGetChat';
+import { useEvaluateChat } from '~/hooks/useEvaluateChat';
+import { useCreateMessage } from '~/hooks/useCreateMessage';
+import { IMessage } from '~/models/message';
 
 interface MessageHistoryItem {
   message: string;
@@ -14,17 +19,45 @@ interface MessageHistoryItem {
 }
 
 export default function Page() {
-  const [messageHistory, setMessageHistory] = useState<MessageHistoryItem[]>(
-    []
-  );
   const searchParams = useSearchParams();
 
   const model = searchParams.get('model') || '';
 
+  const [message, setMessage] = useState('');
+  const messageCount = useRef(0);
+
+  const { getData: getChat, data: chat } = useGetChat();
+  const {
+    getData: getMessages,
+    data: messages,
+    setData: setMessages,
+  } = useGetMessages();
+  const { mutate: sendMessage, isLoading: isLoadingCreateMessage } =
+    useCreateMessage();
+  const {
+    mutate: evaluateConversation,
+    data: evaluateResponse,
+    isLoading: isLoadingEvaluateChat,
+  } = useEvaluateChat();
+
+  const chatId = searchParams.get('chatId') ?? '';
+
+  useEffect(() => {
+    getChat({ chatId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
+
+  useEffect(() => {
+    if (chat) {
+      // fetchedMessages.current = true;
+      getMessages({ chatId: chat._id });
+    }
+  }, [chat]);
+
   const { viewer } = useContext(ViewerContext);
 
   // idk why this is necessary but it on first call to this function returns empty array
-  window.speechSynthesis.getVoices();
+  // window?.speechSynthesis.getVoices();
 
   const getVoice = useCallback(() => {
     let voice = 'Samantha';
@@ -50,23 +83,30 @@ export default function Page() {
 
   // react to new chat responses from the server
   useEffect(() => {
-    if (messageHistory.length && messageHistory[messageHistory.length - 1]) {
-      const newestMessage = messageHistory[messageHistory.length - 1];
-      const [emotions, messages] = parseMessage(newestMessage.message);
+    // if (!messages || messageCount.current !== messages.length + 1) return;
 
-      if (!emotions.length || !messages.length) return;
+    if (messages && messages.length && window?.speechSynthesis) {
+      let newestMessage = messages[messages.length - 1] as any;
 
-      viewer.speakStart();
+      if (newestMessage.response) {
+        newestMessage.text = newestMessage.response;
+      }
+
+      const [emotions, messageSentences] = parseMessage(
+        newestMessage.text ?? ''
+      );
+
+      if (!emotions.length || !messageSentences.length) return;
 
       for (let i = 0; i < emotions.length; i++) {
-        const speech = new SpeechSynthesisUtterance(messages[i]);
-
+        const speech = new SpeechSynthesisUtterance(messageSentences[i]);
         speech.voice = getVoice();
 
         const emotion = emotionsConfig[emotions[i]];
         if (!emotion) continue;
 
         speech.onstart = () => {
+          viewer.speakStart();
           viewer.setEmotion(emotions[i]);
         };
 
@@ -82,17 +122,24 @@ export default function Page() {
         window.speechSynthesis.speak(speech);
       }
     }
-  }, [getVoice, messageHistory, viewer]);
+  }, [getVoice, messages, viewer]);
 
-  const handleSend = (message: string) => {
-    setMessageHistory([
-      ...messageHistory,
-      {
-        source: 'bot',
-        message:
-          '[happy] i very happy [sad] i very sad [angry] i very angry [neutral] i very neutral [relaxed] I very relaxed', // TODO: replace with message
+  const handleSend = async (message: string) => {
+    const newMessage = {
+      chatId,
+      from: 'user',
+      text: message,
+      createdAt: new Date().getTime(),
+    } as Partial<IMessage>;
+    await setMessages([...(messages ?? []), newMessage]);
+    sendMessage({
+      chatId,
+      message,
+      callback: (m) => {
+        setMessages([...(messages ?? []), newMessage, m]);
+        setMessage('');
       },
-    ]);
+    });
   };
 
   return (
@@ -100,58 +147,11 @@ export default function Page() {
       <div className="relative">
         <VrmViewer model={model} />
       </div>
+
       <Messages
-        messageHistory={[
-          { source: 'user', text: 'Hello there!' },
-          { source: 'bot', text: 'Hi! How can I assist you?' },
-          { source: 'user', text: 'I need help with a programming problem.' },
-          { source: 'bot', text: "Sure, I'll do my best to help you." },
-          { source: 'user', text: "Thanks, here's the problem..." },
-          { source: 'bot', text: 'Got it. Let me take a look.' },
-          { source: 'bot', text: 'Alright, I have a solution for you.' },
-          { source: 'user', text: 'That worked perfectly! Thanks a lot!' },
-          {
-            source: 'bot',
-            text: "You're welcome! If you have any more questions, feel free to ask.",
-          },
-          { source: 'user', text: 'Hello there!' },
-          { source: 'bot', text: 'Hi! How can I assist you?' },
-          { source: 'user', text: 'I need help with a programming problem.' },
-          { source: 'bot', text: "Sure, I'll do my best to help you." },
-          { source: 'user', text: "Thanks, here's the problem..." },
-          { source: 'bot', text: 'Got it. Let me take a look.' },
-          { source: 'bot', text: 'Alright, I have a solution for you.' },
-          { source: 'user', text: 'That worked perfectly! Thanks a lot!' },
-          {
-            source: 'bot',
-            text: "You're welcome! If you have any more questions, feel free to ask.",
-          },
-          { source: 'user', text: 'Hello there!' },
-          { source: 'bot', text: 'Hi! How can I assist you?' },
-          { source: 'user', text: 'I need help with a programming problem.' },
-          { source: 'bot', text: "Sure, I'll do my best to help you." },
-          { source: 'user', text: "Thanks, here's the problem..." },
-          { source: 'bot', text: 'Got it. Let me take a look.' },
-          { source: 'bot', text: 'Alright, I have a solution for you.' },
-          { source: 'user', text: 'That worked perfectly! Thanks a lot!' },
-          {
-            source: 'bot',
-            text: "You're welcome! If you have any more questions, feel free to ask.",
-          },
-          { source: 'user', text: 'Hello there!' },
-          { source: 'bot', text: 'Hi! How can I assist you?' },
-          { source: 'user', text: 'I need help with a programming problem.' },
-          { source: 'bot', text: "Sure, I'll do my best to help you." },
-          { source: 'user', text: "Thanks, here's the problem..." },
-          { source: 'bot', text: 'Got it. Let me take a look.' },
-          { source: 'bot', text: 'Alright, I have a solution for you.' },
-          { source: 'user', text: 'That worked perfectly! Thanks a lot!' },
-          {
-            source: 'bot',
-            text: "You're welcome! If you have any more questions, feel free to ask.",
-          },
-        ]}
-        onSend={handleSend}
+        messageHistory={messages ?? []}
+        onSend={(message) => handleSend(message)}
+        isLoadingEvaluateChat={isLoadingEvaluateChat}
       />
     </main>
   );
