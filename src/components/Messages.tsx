@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { removeEmotions } from '~/utils/removeEmotions';
 
 interface MessagesProps {
   messageHistory: { source: string; text: string }[];
@@ -25,6 +26,7 @@ const Messages = ({ messageHistory, onSend }: MessagesProps) => {
           if (message.source === 'bot') {
             className = 'bg-zinc-500 text-white w-fit-content';
           }
+
           return (
             <div
               key={index}
@@ -33,7 +35,9 @@ const Messages = ({ messageHistory, onSend }: MessagesProps) => {
               }`}
             >
               <div className={`p-2 rounded-md ${className}`}>
-                {message.text}
+                {message.source === 'bot'
+                  ? removeEmotions(message.text)
+                  : message.text}
               </div>
             </div>
           );

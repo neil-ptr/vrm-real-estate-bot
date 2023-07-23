@@ -25,7 +25,6 @@ export default function Page() {
 
   // react to new chat responses from the server
   useEffect(() => {
-    console.log('why run twice idk');
     if (messageHistory.length && messageHistory[messageHistory.length - 1]) {
       const newestMessage = messageHistory[messageHistory.length - 1];
       const [emotions, messages] = parseMessage(newestMessage.message);
@@ -63,7 +62,8 @@ export default function Page() {
       ...messageHistory,
       {
         source: 'bot',
-        message: '[happy] i very happy [sad] i very sad', // TODO: replace with message
+        message:
+          '[happy] i very happy [sad] i very sad [angry] i very angry [neutral] i very neutral [relaxed] I very relaxed', // TODO: replace with message
       },
     ]);
   };
