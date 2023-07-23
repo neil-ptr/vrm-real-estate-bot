@@ -1,7 +1,6 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import cardImg1 from "../assets/cardImg1.jpeg";
 import useSound from "use-sound";
 import { useCreateChat } from "~/hooks/useCreateChat";
 import { options } from "~/constant/metadata";
@@ -18,7 +17,6 @@ interface CharacterCardProps {
   personality: string;
   image: StaticImageData;
   profileImg: StaticImageData;
-  selected: boolean;
   role: string;
 }
 
@@ -44,7 +42,7 @@ export function CharacterCard(props: CharacterCardProps) {
         background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${props.image.src})`,
         backgroundSize: "cover",
       }}
-      className={`hover:cursor-pointer group backdrop-brightness-50 relative h-[600px] w-[400px] p-4 flex flex-col items-center overflow-hidden rounded bg-white shadow-lg shadow-black`}
+      className={`hover:cursor-pointer hover:scale-110 transition-transform group backdrop-brightness-50 relative h-[600px] w-[400px] p-4 flex flex-col items-center overflow-hidden rounded bg-white shadow-lg shadow-black`}
     >
       {isLoading ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
