@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
+import { set } from "mongoose";
 import { useSearchParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
+import { EvaluateModal } from "~/components/EvaluateModal";
 import { useCreateMessage } from "~/hooks/useCreateMessage";
 import { useEvaluateChat } from "~/hooks/useEvaluateChat";
 import { useGetChat } from "~/hooks/useGetChat";
@@ -11,6 +13,7 @@ import { useGetMessages } from "~/hooks/useGetMessages";
 import { IMessage } from "~/models/message";
 
 const ChatPage = () => {
+  const [isOpened, setIsOpened] = useState(false);
   const [message, setMessage] = useState("");
   const searchParams = useSearchParams();
   const { getData: getChat, data: chat } = useGetChat();
@@ -39,6 +42,12 @@ const ChatPage = () => {
       getMessages({ chatId: chat._id });
     }
   }, [chat]);
+
+  useEffect(() => {
+    if (evaluateResponse) {
+      setIsOpened(true);
+    }
+  }, [evaluateResponse]);
 
   return (
     <main className="container mx-auto ">
@@ -100,6 +109,13 @@ const ChatPage = () => {
               </button>
               {isLoadingEvaluateChat && <p>Loading...</p>}
               {evaluateResponse && JSON.stringify(evaluateResponse)}
+              {evaluateResponse && (
+                <EvaluateModal
+                  evaluation={evaluateResponse}
+                  isOpen={isOpened}
+                  setIsOpen={setIsOpened}
+                />
+              )}
             </>
           ) : null}
         </div>
