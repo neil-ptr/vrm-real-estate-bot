@@ -34,7 +34,7 @@ const Messages = ({
             message.from = 'ai';
           }
 
-          let className = 'bg-pink-500 text-white w-fit-content';
+          let className = 'bg-violet-700 text-white w-fit-content';
           if (message.from === 'ai') {
             className = 'bg-zinc-500 text-white w-fit-content';
           }
@@ -42,11 +42,11 @@ const Messages = ({
           return (
             <div
               key={index}
-              className={`w-full flex pb-2 ${
+              className={`w-full flex pb-2 text-sm ${
                 message.from === 'user' ? 'justify-end' : 'justify-start'
               }`}
             >
-              <div className={`p-2 rounded-md w-3/4 ${className}`}>
+              <div className={`p-2 rounded-xl w-3/4 ${className}`}>
                 {message.from === 'ai'
                   ? removeEmotions(message.text ?? '')
                   : message.text}
@@ -72,7 +72,7 @@ const Messages = ({
           }}
         />
         <button
-          className="rounded-md bg-purple-500 px-2"
+          className="rounded-md bg-violet-700 px-2"
           type="submit"
           disabled={isLoadingCreateMessage}
         >
