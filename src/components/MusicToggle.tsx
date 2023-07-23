@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export function MusicToggle() {
   const [musicEnabled, setMusicEnabled] = useState(localStorage.getItem("musicEnabled") === "true");
-  const [play, { stop }] = useSound("/sounds/bg-music.mp3", { volume: 0.5 });
+  const [play, { stop }] = useSound("/sounds/bg-music.mp4", { volume: 0.5 });
 
   useEffect(() => {
     if (musicEnabled) {
