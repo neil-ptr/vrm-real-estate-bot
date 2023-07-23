@@ -12,6 +12,10 @@ import { useGetChat } from '~/hooks/useGetChat';
 import { useEvaluateChat } from '~/hooks/useEvaluateChat';
 import { useCreateMessage } from '~/hooks/useCreateMessage';
 import { IMessage } from '~/models/message';
+import Link from 'next/link';
+import { options } from '~/constant/metadata';
+import characters from '~/constant/characters';
+import { EvaluateModal } from '~/components/EvaluateModal';
 
 interface MessageHistoryItem {
   message: string;
@@ -20,8 +24,9 @@ interface MessageHistoryItem {
 
 export default function Page() {
   const searchParams = useSearchParams();
+  const [isOpened, setIsOpened] = useState(false);
 
-  const model = searchParams.get('model') || '';
+  // const model = searchParams.get('model') || '';
 
   const [message, setMessage] = useState('');
   const messageCount = useRef(0);
@@ -40,6 +45,8 @@ export default function Page() {
     isLoading: isLoadingEvaluateChat,
   } = useEvaluateChat();
 
+  const model = characters[chat?.aiRole || 'tenant'].background.modelId;
+
   const chatId = searchParams.get('chatId') ?? '';
 
   useEffect(() => {
@@ -53,6 +60,12 @@ export default function Page() {
       getMessages({ chatId: chat._id });
     }
   }, [chat]);
+
+  useEffect(() => {
+    if (evaluateResponse) {
+      setIsOpened(true);
+    }
+  }, [evaluateResponse]);
 
   const { viewer } = useContext(ViewerContext);
 
@@ -84,6 +97,7 @@ export default function Page() {
   // react to new chat responses from the server
   useEffect(() => {
     // if (!messages || messageCount.current !== messages.length + 1) return;
+    if (typeof window === 'undefined') return;
 
     if (messages && messages.length && window?.speechSynthesis) {
       let newestMessage = messages[messages.length - 1] as any;
@@ -143,16 +157,44 @@ export default function Page() {
   };
 
   return (
-    <main className="grid grid-cols-[13fr_7fr] h-screen w-screen">
-      <div className="relative">
-        <VrmViewer model={model} />
-      </div>
+    <>
+      <main className="grid grid-cols-[13fr_7fr] h-screen w-screen relative">
+        <div className="absolute top-0 left-0 p-4 z-20">
+          <Link
+            className="text-lg cursor-pointer p-4 bg-white text-black rounded-md"
+            href="/"
+          >
+            Back
+          </Link>
+        </div>
+        <div className="relative">
+          <VrmViewer
+            model={model}
+            metadata={
+              options.find(
+                (metadata) => metadata.id === chat?.metadataId
+              ) as any
+            }
+            evaluate={() => {
+              evaluateConversation({ chatId });
+            }}
+            isLoadingEvaluateChat={isLoadingEvaluateChat}
+          />
+        </div>
 
-      <Messages
-        messageHistory={messages ?? []}
-        onSend={(message) => handleSend(message)}
-        isLoadingEvaluateChat={isLoadingEvaluateChat}
-      />
-    </main>
+        <Messages
+          messageHistory={messages ?? []}
+          onSend={(message) => handleSend(message)}
+          isLoadingCreateMessage={isLoadingCreateMessage}
+        />
+      </main>
+      {/* {evaluateResponse && (
+        <EvaluateModal
+          evaluation={evaluateResponse}
+          isOpen={isOpened}
+          setIsOpen={setIsOpened}
+        />
+      )} */}
+    </>
   );
 }

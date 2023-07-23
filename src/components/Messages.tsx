@@ -5,13 +5,13 @@ import { removeEmotions } from '~/utils/removeEmotions';
 interface MessagesProps {
   messageHistory: Partial<IMessage>[];
   onSend: (message: string) => void;
-  isLoadingEvaluateChat: boolean;
+  isLoadingCreateMessage: boolean;
 }
 
 const Messages = ({
   messageHistory,
   onSend,
-  isLoadingEvaluateChat,
+  isLoadingCreateMessage,
 }: MessagesProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState('');
@@ -74,9 +74,9 @@ const Messages = ({
         <button
           className="rounded-md bg-purple-500 px-2"
           type="submit"
-          disabled={isLoadingEvaluateChat}
+          disabled={isLoadingCreateMessage}
         >
-          {isLoadingEvaluateChat ? 'loading...' : 'Send'}
+          {isLoadingCreateMessage ? 'loading...' : 'Send'}
         </button>
       </form>
     </div>
