@@ -2,7 +2,6 @@
 
 import { CharacterCard } from "~/components/CharacterCard";
 import characters from "~/constant/characters";
-import { useState } from "react";
 import { MusicToggle } from "~/components/MusicToggle";
 
 export default function Home() {
