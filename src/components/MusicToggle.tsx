@@ -3,6 +3,8 @@ import useSound from "use-sound";
 import { Switch } from "./ui/switch";
 import { useEffect, useState } from "react";
 
+const localStorage = window.localStorage;
+
 export function MusicToggle() {
   const [musicEnabled, setMusicEnabled] = useState(localStorage.getItem("musicEnabled") === "true");
   const [play, { stop }] = useSound("/sounds/bg-music.mp4", { volume: 0.5 });
