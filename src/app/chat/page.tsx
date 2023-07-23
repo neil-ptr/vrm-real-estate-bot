@@ -144,10 +144,12 @@ export default function Page() {
     });
   };
 
+  const metadata = options.find((metadata) => metadata.id === chat?.metadataId);
+
   return (
     <>
-      <main className="grid grid-cols-[13fr_7fr] h-screen w-screen relative">
-        <div className="absolute top-0 left-0 p-4 z-20">
+      <main className="grid grid-cols-[13fr_7fr] h-screen w-screen relative bg-gradient-to-b from-[#583386] to-[#15162c]">
+        <div className="absolute top-8 left-8 p-4 z-20">
           <Link className="text-lg cursor-pointer p-4 bg-white text-black rounded-md" href="/">
             Back
           </Link>
@@ -161,6 +163,36 @@ export default function Page() {
             }}
             isLoadingEvaluateChat={isLoadingEvaluateChat}
           />
+          {metadata ? (
+            <div className="absolute grid gap-2 bottom-8 left-8 max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden p-3 text-black">
+              <h2 className="text-xl font-semibold mb-2">Client Information</h2>
+              <p>
+                <strong>Role:</strong> {metadata.role}
+              </p>
+
+              <p>
+                <strong>Area:</strong> {metadata.area}
+              </p>
+              <p>
+                <strong>Budget:</strong> {metadata.budget}
+              </p>
+              <p>
+                <strong>Rooms:</strong> {metadata.rooms}
+              </p>
+              <p>
+                <strong>Bathrooms:</strong> {metadata.bathrooms}
+              </p>
+            </div>
+          ) : null}
+          <button
+            disabled={isLoadingEvaluateChat}
+            onClick={() => {
+              evaluateConversation({ chatId });
+            }}
+            className="absolute bottom-8 px-4 right-8 rounded-lg bg-white text-black py-2 mt-2 cursor-pointer z-20"
+          >
+            {isLoadingEvaluateChat ? "Evaluating..." : "Evaluate"}
+          </button>
         </div>
 
         <Messages
