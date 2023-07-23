@@ -1,13 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { CharacterCard } from "~/components/CharacterCard";
-import cardImg2 from "~/assets/cardImg2.jpeg";
-import cardImg3 from "~/assets/cardImg3.jpeg";
 import characters from "~/constant/characters";
 import { useState } from "react";
 import { MusicToggle } from "~/components/MusicToggle";
-import useSound from "use-sound";
 
 export default function Home() {
   const characterArr = Object.entries(characters).map(([role, character]) => ({ ...character.background, role }));

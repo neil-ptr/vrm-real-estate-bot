@@ -44,7 +44,7 @@ export function CharacterCard(props: CharacterCardProps) {
         background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${props.image.src})`,
         backgroundSize: "cover",
       }}
-      className={`hover:cursor-pointer group backdrop-brightness-50 relative h-[500px] p-4 flex flex-col items-center w-96 overflow-hidden rounded bg-white shadow-lg shadow-black`}
+      className={`hover:cursor-pointer group backdrop-brightness-50 relative h-[600px] w-[400px] p-4 flex flex-col items-center overflow-hidden rounded bg-white shadow-lg shadow-black`}
     >
       {isLoading ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
