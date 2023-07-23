@@ -15,13 +15,10 @@ export interface MetaData {
 }
 
 interface VrmViewer {
-  model: string;
-  metadata: MetaData | undefined;
-  evaluate: () => void;
-  isLoadingEvaluateChat: boolean;
+  model: string | null;
 }
 
-export default function VrmViewer({ model, metadata, evaluate, isLoadingEvaluateChat }: VrmViewer) {
+export default function VrmViewer({ model }: VrmViewer) {
   const { viewer } = useContext(ViewerContext);
 
   const canvasRef = useCallback(
@@ -34,6 +31,10 @@ export default function VrmViewer({ model, metadata, evaluate, isLoadingEvaluate
     },
     [viewer, model]
   );
+
+  if (!model) {
+    return null;
+  }
 
   return (
     <div className={"absolute top-0 left-0 h-[100svh]"}>

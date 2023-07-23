@@ -36,7 +36,7 @@ export default function Page() {
   const { mutate: sendMessage, isLoading: isLoadingCreateMessage } = useCreateMessage();
   const { mutate: evaluateConversation, data: evaluateResponse, isLoading: isLoadingEvaluateChat } = useEvaluateChat();
 
-  const model = characters[chat?.aiRole || "tenant"].background.modelId;
+  const model = chat ? characters[chat.aiRole].background.modelId : null;
 
   const chatId = searchParams.get("chatId") ?? "";
 
@@ -155,14 +155,7 @@ export default function Page() {
           </Link>
         </div>
         <div className="relative">
-          <VrmViewer
-            model={model}
-            metadata={options.find((metadata) => metadata.id === chat?.metadataId) as any}
-            evaluate={() => {
-              evaluateConversation({ chatId });
-            }}
-            isLoadingEvaluateChat={isLoadingEvaluateChat}
-          />
+          <VrmViewer model={model} />
           {metadata ? (
             <div className="absolute grid gap-2 bottom-8 left-8 max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden p-3 text-black">
               <h2 className="text-xl font-semibold mb-2">Client Information</h2>
