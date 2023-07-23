@@ -97,7 +97,9 @@ export class VRMAnimation {
   ): THREE.KeyframeTrack[] {
     const tracks: THREE.KeyframeTrack[] = [];
 
-    for (const [name, origTrack] of this.expressionTracks.entries()) {
+    const expressionEntries = Array.from(this.expressionTracks.entries());
+
+    for (const [name, origTrack] of expressionEntries) {
       const trackName = expressionManager.getExpressionTrackName(name);
 
       if (trackName != null) {
