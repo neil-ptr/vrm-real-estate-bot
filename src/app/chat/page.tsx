@@ -149,7 +149,7 @@ export default function Page() {
   return (
     <>
       <main className="grid grid-cols-[13fr_7fr] h-screen w-screen relative bg-gradient-to-b from-[#583386] to-[#15162c]">
-        <div className="absolute top-8 left-8 p-4 z-20">
+        <div className="absolute top-8 left-8 z-20">
           <Link className="text-lg cursor-pointer p-4 bg-white text-black rounded-md" href="/">
             Back
           </Link>
