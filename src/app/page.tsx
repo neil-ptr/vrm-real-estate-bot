@@ -1,27 +1,15 @@
-import Link from 'next/link';
+import Link from "next/link";
+import { CharacterCard, testCharacter } from "~/components/CharacterCard";
+import cardImg2 from "~/assets/cardImg2.jpeg";
+import cardImg3 from "~/assets/cardImg3.jpeg";
 
 export default function Home() {
   return (
-    <main className="container mx-auto ">
-      <div className="flex justify-center w-full gap-4">
-        <Link
-          href="/chat?model=1903884660012638236"
-          className="w-1/3 bg-zinc-500 h-[400px] rounded-xl"
-        >
-          Bot 1
-        </Link>
-        <Link
-          href="/chat?model=4490707391186690073"
-          className="w-1/3 bg-zinc-500 h-[400px] rounded-xl"
-        >
-          Bot 1
-        </Link>
-        <Link
-          href="/chat?model=8988580958909680445"
-          className="w-1/3 bg-zinc-500 h-[400px] rounded-xl"
-        >
-          Bot 1
-        </Link>
+    <main className="grid min-h-screen place-items-center bg-gradient-to-b from-[#583386] to-[#15162c]">
+      <div className="container flex flex-wrap items-center justify-center gap-12 px-4 py-16 ">
+        <CharacterCard {...testCharacter} />
+        <CharacterCard {...testCharacter} image={cardImg2} />
+        <CharacterCard {...testCharacter} image={cardImg3} />
       </div>
     </main>
   );
